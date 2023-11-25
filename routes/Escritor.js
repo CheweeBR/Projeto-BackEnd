@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Defina suas rotas aqui
 router.get('/', function(req, res, next) {
-  res.send('Rota Leitor');
+  res.send('Rota Escritor');
 });
 
 // Exporte o roteador
