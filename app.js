@@ -16,7 +16,7 @@ const Reportagem = mongoose.model('Reportagem', {
   titulo: String,
   descricao: String,
   data: Date,
-  
+  autor: String
 });
 
 app.use(session({secret: "Batata", resave: true, saveUninitialized: true}));
