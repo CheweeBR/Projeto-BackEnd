@@ -1,23 +1,16 @@
-var createError = require('http-errors');
+const createError = require('http-errors');
 const mongoose = require('mongoose');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var session = require('express-session');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const session = require('express-session');
 
-var indexRouter = require('./routes/index');
+const indexRouter = require('./routes/index');
 
-var app = express();
+const app = express();
 
-mongoose.connect("mongodb+srv://tiagoeloy:<password>@jornalapi.adtexq9.mongodb.net/?retryWrites=true&w=majority");
-
-const Reportagem = mongoose.model('Reportagem', { 
-  titulo: String,
-  descricao: String,
-  data: Date,
-  autor: String
-});
+mongoose.connect("mongodb+srv://tiagoeloy:YNQ8HZPLMj7LFqob@jornalapi.adtexq9.mongodb.net/?retryWrites=true&w=majority");  
 
 app.use(session({secret: "Batata", resave: true, saveUninitialized: true}));
 

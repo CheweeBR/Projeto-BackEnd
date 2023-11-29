@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const Reportagem = require('../models/database');
 
 router.get('/', function(req, res, next) {
   if(req.session.user){
@@ -20,6 +21,17 @@ router.post('/login', function(req, res, next) {
   req.session.user = user;*/
   res.send("hellow world")
   
+});
+
+router.post('/AdicionarReportagem', async function(req, res, next) {
+  const reportagem = new Reportagem({ 
+    titulo: req.body.titulo,
+    descricao: req.body.descricao,
+    data: req.body.data,
+    autor: req.body.autor,
+  });
+  await reportagem.save();
+  res.send(`Reportagem postada com sucesso!\n ${reportagem}`);
 });
 
 router.get('/install', function(req,res) {
