@@ -6,11 +6,11 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const session = require('express-session');
 
+const port = 3000;
+
 const indexRouter = require('./routes/index');
 
-const app = express();
-
-mongoose.connect("mongodb+srv://tiagoeloy:YNQ8HZPLMj7LFqob@jornalapi.adtexq9.mongodb.net/?retryWrites=true&w=majority");  
+const app = express(); 
 
 app.use(session({secret: "Batata", resave: true, saveUninitialized: true}));
 
@@ -34,6 +34,11 @@ app.use(function(err, req, res, next) {
 
   res.status(err.status || 500);
   res.render('error');
+});
+
+app.listen(port, function() {
+  mongoose.connect("mongodb+srv://tiagoeloy:YNQ8HZPLMj7LFqob@jornalapi.adtexq9.mongodb.net/?retryWrites=true&w=majority"); 
+  console.log("Servidor rodando na porta 3000");
 });
 
 module.exports = app;
