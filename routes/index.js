@@ -1,6 +1,9 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const jwt = require('jsonwebtoken');
 const Reportagem = require('../models/database');
+const Usuario = require('../models/database');
+const secret = "Batata";
 
 router.get('/', function(req, res, next) {
   if(req.session.user){
@@ -10,16 +13,15 @@ router.get('/', function(req, res, next) {
   }
 });
 
-router.post('/login', function(req, res, next) {
-  /*if("Aqui será a verificação do usuário e senha no banco de dados"){
+router.post('/login', function(req, res) {
+  const user = { };
+  if(req.body.user && req.body.password){
+    jwt.sign(user, secret, { expiresIn: '100' })
+    req.session.user = user;
+    res.status(200).json({ error: 'Acesso realizado com sucesso' });
+  }
 
-  }
-  user = {
-    user: req.body.user,
-    senha: req.body.senha
-  }
-  req.session.user = user;*/
-  res.send("hellow world")
+  res.send(`Login ou senha inválidos.`);
   
 });
 

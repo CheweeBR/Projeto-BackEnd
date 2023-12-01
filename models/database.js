@@ -8,5 +8,12 @@ const Reportagem = mongoose.model('Reportagem', {
     autor: String,
 });
 
+const Usuario = mongoose.model('Usuario', { 
+    Nome: String,
+    Password: String,
+    permissao: String,
+});
 
-module.exports = Reportagem;
+
+
+module.exports = Reportagem, Usuario;
