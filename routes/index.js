@@ -24,6 +24,22 @@ router.post('/login', function(req, res) {
   
 });
 
+router.post('/registro', function(req, res) {
+
+  if(req.body.user && req.body.password){
+    const user = new Usuario({ 
+      user: req.body.user,
+      password: req.body.password,
+      type: 'LEITOR'
+    });
+    user.save();
+    res.status(200).json({ msg: 'Usuário registrado com sucesso' });
+  }
+  res.status(401).json({ msg: `Usuário ou senha inválidos.` });
+  
+});
+
+
 
 router.get('/install', function(req,res) {
   //instalar que realiza a instalação do banco de dados (criação das tabelas/coleções e inserção de dados no banco)

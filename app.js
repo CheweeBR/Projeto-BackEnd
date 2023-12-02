@@ -38,8 +38,8 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(process.env.port, function() {
-  mongoose.connect(process.env.serverPass); 
-  console.log("Servidor rodando na porta 8080");
+  mongoose.connect(process.env.serverPass);
+  console.log(`Servidor rodando na porta 8080`);
 });
 
 module.exports = app;
