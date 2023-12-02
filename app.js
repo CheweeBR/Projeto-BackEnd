@@ -7,11 +7,13 @@ const logger = require('morgan');
 const session = require('express-session');
 const jwt = require('jsonwebtoken');
 
+require('dotenv').config();
+
 const indexRouter = require('./routes/index');
 
 const app = express(); 
 
-app.use(session({secret: "Batata", resave: true, saveUninitialized: true}));
+app.use(session({secret: process.env.secret, resave: true, saveUninitialized: true}));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -35,9 +37,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(3001, function() {
-  mongoose.connect("mongodb+srv://tiagoeloy:YNQ8HZPLMj7LFqob@jornalapi.adtexq9.mongodb.net/?retryWrites=true&w=majority"); 
-  console.log("Servidor rodando na porta 3001");
+app.listen(process.env.port, function() {
+  mongoose.connect(process.env.serverPass); 
+  console.log("Servidor rodando na porta 8080");
 });
 
 module.exports = app;
