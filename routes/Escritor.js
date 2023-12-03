@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Reportagem = require('../models/ReportagemModel');
 
 // Defina suas rotas aqui
 router.get('/', function(req, res, next) {
@@ -37,6 +38,4 @@ router.put('/AtualizarReportagem/:id', async function(req, res) {
   res.send("A reportagem atualizada foi: \n"+ reportagem);
 });
 
-
-// Exporte o roteador
 module.exports = router;

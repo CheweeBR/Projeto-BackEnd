@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const Reportagem = require('../models/database');
-const Usuario = require('../models/database');
-const secret = "Batata";
+const Usuario = require('../models/UsuarioModel');
+const autenticacao = require('../middlewares/autenticacao');
 
 router.get('/', function(req, res, next) {
   if(req.session.user){
@@ -16,7 +15,7 @@ router.get('/', function(req, res, next) {
 router.post('/login', function(req, res) {
   const user = { };
   if(req.body.user && req.body.password){
-    jwt.sign(user, secret, { expiresIn: '100' })
+    jwt.sign(user, rocess.env.secret, { expiresIn: '100' })
     req.session.user = user;
     res.status(200).json({ msg: 'Acesso realizado com sucesso' });
   }
@@ -24,22 +23,16 @@ router.post('/login', function(req, res) {
   
 });
 
-router.post('/registro', function(req, res) {
-
-  if(req.body.user && req.body.password){
-    const user = new Usuario({ 
-      user: req.body.user,
-      password: req.body.password,
-      type: 'LEITOR'
-    });
-    user.save();
-    res.status(200).json({ msg: 'Usuário registrado com sucesso' });
-  }
-  res.status(401).json({ msg: `Usuário ou senha inválidos.` });
-  
+router.post('/registro', autenticacao, async function(req, res) {
+  const usuario = new Usuario ({
+    Nome: req.body.user,
+    password: req.body.password,
+    permissao: process.env.TYPEDefault
+  });
+  await usuario.save();
+  console.log(usuario);
+  res.status(200).json({ msg: `Usuário criado com sucesso!` });
 });
-
-
 
 router.get('/install', function(req,res) {
   //instalar que realiza a instalação do banco de dados (criação das tabelas/coleções e inserção de dados no banco)
