@@ -12,18 +12,15 @@ router.get('/', function(req, res, next) {
   }
 });
 
-router.post('/login', function(req, res) {
-  const user = { };
-  if(req.body.user && req.body.password){
-    jwt.sign(user, rocess.env.secret, { expiresIn: '100' })
-    req.session.user = user;
-    res.status(200).json({ msg: 'Acesso realizado com sucesso' });
-  }
-  res.status(401).json({ msg: `Login ou senha inválidos.` });
-  
+router.post('/login', autenticacao.loginUser, async function(req, res) {
+  const user = await Usuario.findOne({Nome: req.body.user});
+  const usuario = user.toObject();
+  const token = jwt.sign(usuario, process.env.secret, { expiresIn: '100' });
+  req.session.user = usuario;
+  res.status(200).json({ msg: 'Acesso realizado com sucesso', token: token, user: usuario });
 });
 
-router.post('/registro', autenticacao, async function(req, res) {
+router.post('/registro', autenticacao.registroUsuario, async function(req, res) {
   const usuario = new Usuario ({
     Nome: req.body.user,
     password: req.body.password,

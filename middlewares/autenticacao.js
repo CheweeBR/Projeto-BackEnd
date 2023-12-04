@@ -17,4 +17,21 @@ const registroUsuario = async (req, res, next) => {
     }
 }
 
-module.exports = registroUsuario;
+const loginUser = async (req, res, next) => {
+    if(req.body.user && req.body.password){
+        const usuario = await Usuario.findOne({ Nome: req.body.user });
+        if(usuario){
+            if(usuario.password === req.body.password){
+                next();
+            } else {
+                res.status(401).json({ msg: `Login ou senha inválidos.` });
+            }
+        } else {
+            res.status(401).json({ msg: `Login ou senha inválidos.` });
+        }
+    } else {
+        res.status(401).json({ msg: `Os campos estão vazios.` });
+    }
+}
+
+module.exports = {registroUsuario, loginUser};
