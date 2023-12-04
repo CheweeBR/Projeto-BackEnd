@@ -10,6 +10,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const indexRouter = require('./routes/index');
+const escritorRouter = require('./routes/Escritor');
+const escritorAdmin = require('./routes/Admin');
 
 const app = express(); 
 
@@ -24,6 +26,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/', escritorRouter);
+app.use('/', escritorAdmin);
 
 app.use(function(req, res, next) {
   next(createError(404));

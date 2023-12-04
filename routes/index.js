@@ -4,11 +4,19 @@ const jwt = require('jsonwebtoken');
 const Usuario = require('../models/UsuarioModel');
 const autenticacao = require('../middlewares/autenticacao');
 
-router.get('/', function(req, res, next) {
-  if(req.session.user){
-    res.send('Rota Index');
-  } else {
-    res.status(401).json({ error: 'Usuário não autenticado' });
+router.get('/', autenticacao.checarAutenticacao, function(req, res) {
+  usuario = req.session.user;
+  if(usuario.permissao === process.env.TYPEA) {
+    res.status(200).json({ msg: `Olá ${usuario.Nome}, você está autenticado como administrador.` });
+  }
+  else if (usuario.permissao === process.env.TYPEB) {
+    res.status(200).json({ msg: `Olá ${usuario.Nome}, você está autenticado como escritor.` });
+  }
+  else if (usuario.permissao === process.env.TYPEDefault) {
+    res.status(200).json({ msg: `Olá ${usuario.Nome}, você está autenticado como Leitor.` });
+  } 
+  else {
+    res.status(401).json({ msg: `Você não tem permissão para acessar este recurso.` });
   }
 });
 

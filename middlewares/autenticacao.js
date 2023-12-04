@@ -34,4 +34,36 @@ const loginUser = async (req, res, next) => {
     }
 }
 
-module.exports = {registroUsuario, loginUser};
+const checarAutenticacao = (req, res, next) => {
+    if(req.session.user){
+        next();
+    } else {
+        res.status(401).json({ msg: `Usuário não autenticado.` });
+    }
+}
+
+const checarEscritor = (req, res, next) => {
+    if(req.session.user) {
+        if(req.session.user.permissao == process.env.TYPEB){
+            next();
+        } else {
+            res.status(401).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
+        }
+    } else {
+        res.status(401).json({ msg: `Usuário não autenticado.` });
+    }
+}
+
+const checarAdmin = (req, res, next) => {
+    if(req.session.user) {
+        if(req.session.user.permissao == process.env.TYPEA){
+            next();
+        } else {
+            res.status(401).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
+        }
+    } else {
+        res.status(401).json({ msg: `Usuário não autenticado.` });
+    }
+}
+
+module.exports = {registroUsuario, loginUser, checarAutenticacao, checarEscritor, checarAdmin};
