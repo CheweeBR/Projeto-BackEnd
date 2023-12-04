@@ -15,12 +15,6 @@ router.post('/AdicionarReportagem', autenticacao.checarEscritor, async function(
   res.send(`Reportagem postada com sucesso!\n ${reportagem}`);
 });
 
-// Rota para listar reportagens
-router.get('/Reportagem', autenticacao.checarEscritor, async function(req, res) {
-  const reportagem = await Reportagem.find();
-  res.send(reportagem);
-});
-
 // Rota para deletar reportagens
 router.delete('/DeletarReportagem/:id', autenticacao.checarEscritor, async function(req, res) {
   const reportagem = await Reportagem.findByIdAndDelete(req.params.id);

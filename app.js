@@ -11,7 +11,8 @@ require('dotenv').config();
 
 const indexRouter = require('./routes/index');
 const escritorRouter = require('./routes/Escritor');
-const escritorAdmin = require('./routes/Admin');
+const adminRouter = require('./routes/Admin');
+const leitorRouter = require('./routes/Leitor');
 
 const app = express(); 
 
@@ -27,7 +28,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/', escritorRouter);
-app.use('/', escritorAdmin);
+app.use('/', adminRouter);
+app.use('/', leitorRouter);
 
 app.use(function(req, res, next) {
   next(createError(404));

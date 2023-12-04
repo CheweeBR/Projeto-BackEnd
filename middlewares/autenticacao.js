@@ -66,4 +66,16 @@ const checarAdmin = (req, res, next) => {
     }
 }
 
-module.exports = {registroUsuario, loginUser, checarAutenticacao, checarEscritor, checarAdmin};
+const checarLeitor = (req, res, next) => {
+    if(req.session.user) {
+        if(req.session.user.permissao == process.env.TYPEDefault){
+            next();
+        } else {
+            res.status(401).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
+        }
+    } else {
+        res.status(401).json({ msg: `Usuário não autenticado.`});
+    }
+}
+
+module.exports = {registroUsuario, loginUser, checarAutenticacao, checarEscritor, checarAdmin,checarLeitor};
