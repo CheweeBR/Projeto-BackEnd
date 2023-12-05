@@ -23,7 +23,7 @@ router.put('/AlterarPermissao', autenticacao.checarAdmin,restricao.verificaPermi
 router.delete('/DeletarUsuario', autenticacao.checarAdmin, async function(req, res) {
     usuario = await Usuario.findOne({ Nome: req.body.user });
     if(usuario){
-        await usuario.delete(usuario);
+        await usuario.deleteOne(usuario);
         res.status(200).json({ msg: `Usuário deletado com sucesso!` });
     } else {
         res.status(401).json({ msg: `Usuário não encontrado.` });
