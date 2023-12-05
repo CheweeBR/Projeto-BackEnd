@@ -12,23 +12,25 @@ router.get('/Reportagem', autenticacao.checarLeitor, async function(req, res) {
 
 // Rota para buscar reportagem por conteúdo
 
-router.get('/Reportagem/:conteudo', autenticacao.checarLeitor, async function(req, res) {
+router.get('/Reportagem/:conteudo', autenticacao.checarAutenticacao, async function(req, res) {
   const conteudo = req.params.conteudo;
-
-  if (!conteudo || conteudo.trim() === '') {
-    res.status(400).json({ error: 'Conteúdo inválido' });
-    return;
+  const buscar = await Reportagem.findOne({ descricao: conteudo });
+  console.log(conteudo);
+  console.log(buscar);
+  if(buscar) {
+    const regex = new RegExp(conteudo, 'i');
+    const reportagem = await Reportagem.aggregate([
+      {
+        $match: {
+          conteudo: { $regex: regex }
+        }
+      }
+    ]);
+    res.send(reportagem);
   }
-
-  const regex = new RegExp(conteudo, 'i');
-
-  const reportagem = await Reportagem.find({
-    $regex: {
-      conteudo: regex
-    }
-  });
-
-  res.send(reportagem);
+  else {
+    res.status(400).json({ error: 'Conteúdo não encontrado.' });
+  }
 });
 
 

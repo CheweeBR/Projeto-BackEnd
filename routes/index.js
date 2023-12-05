@@ -23,10 +23,12 @@ router.get('/', autenticacao.checarAutenticacao, function(req, res) {
 router.post('/login', autenticacao.loginUser, async function(req, res) {
   const user = await Usuario.findOne({Nome: req.body.user});
   const usuario = user.toObject();
-  const token = jwt.sign(usuario, process.env.secret, { expiresIn: '100' });
+  // Definindo o valor de req.session.user
   req.session.user = usuario;
-  res.status(200).json({ msg: 'Acesso realizado com sucesso', token: token, user: usuario });
+  const token = jwt.sign(usuario, process.env.secret, { expiresIn: '100' });
+  res.status(200).json({ msg: 'Acesso realizado com sucesso', token: token});
 });
+
 
 router.post('/registro', autenticacao.registroUsuario, async function(req, res) {
   const usuario = new Usuario ({

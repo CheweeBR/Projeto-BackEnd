@@ -16,7 +16,7 @@ const leitorRouter = require('./routes/Leitor');
 
 const app = express(); 
 
-app.use(session({secret: process.env.secret, resave: true, saveUninitialized: true}));
+app.use(session({secret: process.env.secret, resave: false, saveUninitialized: true}));
 
 app.use(logger('dev'));
 app.use(express.json());

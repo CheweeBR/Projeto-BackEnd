@@ -1,3 +1,4 @@
+
 const Usuario = require('../models/UsuarioModel');
 
 const registroUsuario = async (req, res, next) => {
@@ -67,8 +68,6 @@ const checarAdmin = (req, res, next) => {
 }
 
 const checarLeitor = (req, res, next) => {
-    user = req.session.user;
-    console.log(req.session.user);
     if(req.session.user) {
         if(req.session.user.permissao == process.env.TYPEDefault) {
             next();
