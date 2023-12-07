@@ -7,27 +7,19 @@ const router = express.Router();
 
 // Rota para alterar o tipo de permissão dos usuários
 
-router.put('/AlterarPermissao', autenticacao.checarAdmin,restricao.verificaPermissao, async function(req, res) {
+router.put('/AlterarPermissao', autenticacao.checarAdmin,restricao.verificaTipoPermissao, async function(req, res) {
     usuario = await Usuario.findOne({ Nome: req.body.user });
-    if(usuario){
-        usuario.permissao = req.body.permissao;
-        await usuario.updateOne(usuario);
-        res.status(200).json({ msg: `Permissão alterada com sucesso!` });
-    } else {
-        res.status(401).json({ msg: `Usuário não encontrado.` });
-    }
+    usuario.permissao = req.body.permissao;
+    await usuario.updateOne(usuario);
+    res.status(200).json({ msg: `Permissão alterada com sucesso!` });
 });
 
 // Rota para deletar usuários
 
-router.delete('/DeletarUsuario', autenticacao.checarAdmin, async function(req, res) {
+router.delete('/DeletarUsuario', autenticacao.checarAdmin, restricao.verificaADMparaDeletar, async function(req, res) {
     usuario = await Usuario.findOne({ Nome: req.body.user });
-    if(usuario){
-        await usuario.deleteOne(usuario);
-        res.status(200).json({ msg: `Usuário deletado com sucesso!` });
-    } else {
-        res.status(401).json({ msg: `Usuário não encontrado.` });
-    }
+    await usuario.deleteOne(usuario);
+    res.status(200).json({ msg: `Usuário deletado com sucesso!` });
 });
 
 module.exports = router;

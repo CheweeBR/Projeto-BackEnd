@@ -5,6 +5,7 @@ const reportagemSchema = new mongoose.Schema({
     descricao: String,
     data: String,
     autor: String,
+    comentarios: Array,
 });
 
 const Reportagem = mongoose.model('Reportagem', reportagemSchema);

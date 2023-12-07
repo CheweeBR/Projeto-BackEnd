@@ -48,7 +48,7 @@ const checarEscritor = (req, res, next) => {
         if(req.session.user.permissao == process.env.TYPEB){
             next();
         } else {
-            res.status(401).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
+            res.status(403).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
         }
     } else {
         res.status(401).json({ msg: `Usuário não autenticado.` });
@@ -60,7 +60,7 @@ const checarAdmin = (req, res, next) => {
         if(req.session.user.permissao == process.env.TYPEA){
             next();
         } else {
-            res.status(401).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
+            res.status(403).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
         }
     } else {
         res.status(401).json({ msg: `Usuário não autenticado.` });
@@ -72,7 +72,7 @@ const checarLeitor = (req, res, next) => {
         if(req.session.user.permissao == process.env.TYPEDefault) {
             next();
         } else {
-            res.status(401).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
+            res.status(403).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
         }
     } else {
         res.status(401).json({ msg: `Usuário não autenticado.`});

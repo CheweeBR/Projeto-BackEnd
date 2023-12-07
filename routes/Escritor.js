@@ -9,10 +9,10 @@ router.post('/AdicionarReportagem', autenticacao.checarEscritor, async function(
     titulo: req.body.titulo,
     descricao: req.body.descricao,
     data: req.body.data,
-    autor: req.body.autor,
+    autor: req.session.user.Nome,
   });
   await reportagem.save();
-  res.send(`Reportagem postada com sucesso!\n ${reportagem}`);
+  res.status(200).json({ msg: `Reportagem adicionada com sucesso!` });
 });
 
 // Rota para deletar reportagens
