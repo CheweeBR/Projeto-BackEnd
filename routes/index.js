@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const Usuario = require('../models/UsuarioModel');
 const autenticacao = require('../middlewares/autenticacao');
 
+
 router.get('/', autenticacao.checarAutenticacao, function(req, res) {
   usuario = req.session.user;
   if(usuario.permissao === process.env.TYPEA) {
@@ -23,10 +24,9 @@ router.get('/', autenticacao.checarAutenticacao, function(req, res) {
 router.post('/login', autenticacao.loginUser, async function(req, res) {
   const user = await Usuario.findOne({Nome: req.body.user});
   const usuario = user.toObject();
-  // Definindo o valor de req.session.user
   req.session.user = usuario;
   const token = jwt.sign(usuario, process.env.secret, { expiresIn: '100' });
-  res.status(200).json({ msg: 'Acesso realizado com sucesso', token: token});
+  res.status(200).json({ msg: 'Acesso realizado com sucesso', token: token, req: req.session.user});
 });
 
 

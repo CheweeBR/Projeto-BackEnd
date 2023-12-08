@@ -5,6 +5,7 @@ const ComentarioSchema = new mongoose.Schema({
     data: String,
     nota: Number,
     autor: String,
+    autorID: String,
     reportagemID: String,
 });
 

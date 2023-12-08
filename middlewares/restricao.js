@@ -1,5 +1,6 @@
 const Usuario = require('../models/UsuarioModel');
 const Reportagem = require('../models/ReportagemModel');
+const Comentario = require('../models/ComentarioModel');
 
 const verificaTipoPermissao = async (req, res, next) => {
     const usuario = await Usuario.findOne({ Nome: req.body.user });
@@ -61,4 +62,36 @@ const verificaAttComentario = async (req, res, next) => {
     }
 }
 
-module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario};
+const verificaDelComentario = async (req, res, next) => {
+    const comentario = await Comentario.findOne({ _id: req.params.id });
+    if(comentario) {
+        if(req.session.user.Nome == comentario.autor) {
+        next();
+        } else {
+            res.status(403).json({ msg: `Você não é o autor desse comentário, permissão negada.` });
+        }
+    } else {
+        res.status(401).json({ msg: `Comentário não encontrado.` });
+    }
+}
+
+const verificaListComentario = async (req, res, next) => {
+    const comentario = await Comentario.find();
+    if(comentario) {
+        const limite = parseInt(req.query.limite);
+        const pagina = parseInt(req.query.página);
+        if(limite == "" && pagina == "") {
+            if(limite == 5 || limite == 10 || limite == 30) {
+                next();
+            } else {
+                res.status(406).json({ msg: `Limite inválido.` });
+            }
+        } else {
+            res.status(406).json({ msg: `Campos vazios.` });
+        }
+    } else {
+        res.status(401).json({ msg: `Nenhum comentário encontrado.` });
+    }
+}
+
+module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario, verificaDelComentario, verificaListComentario};
