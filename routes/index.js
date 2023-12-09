@@ -4,8 +4,9 @@ const jwt = require('jsonwebtoken');
 const Usuario = require('../models/UsuarioModel');
 const autenticacao = require('../middlewares/autenticacao');
 
+router.use(autenticacao.checarAutenticacao);
 
-router.get('/', autenticacao.checarAutenticacao, function(req, res) {
+router.get('/', function(req, res) {
   usuario = req.session.user;
   if(usuario.permissao === process.env.TYPEA) {
     res.status(200).json({ msg: `Olá ${usuario.Nome}, você está autenticado como administrador.` });
