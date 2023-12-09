@@ -3,6 +3,8 @@ const router = express.Router();
 const Reportagem = require('../models/ReportagemModel');
 const autenticacao = require('../middlewares/autenticacao');
 
+router.use(autenticacao.checarAutenticacao);
+
 // Rota para adicionar reportagens
 router.post('/AdicionarReportagem', autenticacao.checarEscritor, async function(req, res) {
   const reportagem = new Reportagem({ 

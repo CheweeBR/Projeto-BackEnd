@@ -6,16 +6,18 @@ const Usuario = require('../models/UsuarioModel');
 const autenticacao = require('../middlewares/autenticacao');
 const restricao = require('../middlewares/restricao');
 
+router.use(autenticacao.checarAutenticacao);
+
 // Rota para listar reportagens
 
-router.get('/Reportagem', autenticacao.checarAutenticacao, async function(req, res) {
+router.get('/Reportagem', async function(req, res) {
   const reportagem = await Reportagem.find();
   res.send(reportagem);
 });
 
 // Rota para buscar reportagem por conteúdo
 
-router.get('/Reportagem/:conteudo', autenticacao.checarAutenticacao, async function(req, res) {
+router.get('/Reportagem/:conteudo', async function(req, res) {
   const conteudo = req.body.conteudo;
   const buscar = await Reportagem.findOne({ descricao: conteudo });
   console.log(conteudo);
@@ -32,19 +34,18 @@ router.get('/Reportagem/:conteudo', autenticacao.checarAutenticacao, async funct
 
 // Rota para listar comentários
 
-router.get('/Comentarios', autenticacao.checarAutenticacao, restricao.verificaListComentario, async function(req, res) {
+router.get('/Comentarios/', restricao.verificaListComentario, async function(req, res) {
   const limite = parseInt(req.query.limite);
   const pagina = parseInt(req.query.pagina);
   const deslocamento = (pagina - 1) * limite;
   const comentario = await Comentario.find().skip(deslocamento).limit(limite);
   res.status(200).json({msg: `Comentários:`, comentario});
-
 });
 
 
 // Rota para adicionar comentários
 
-router.post('/adicionarComentario/:id', autenticacao.checarAutenticacao, restricao.verificarAddComentario, async function(req, res) {   
+router.post('/adicionarComentario/:id',restricao.verificarAddComentario, async function(req, res) {   
   const comentario = new Comentario({ 
     conteudo: req.body.conteudo,
     data: Date(),
@@ -75,7 +76,6 @@ router.delete('/deletarComentario/:id', autenticacao.checarLeitor, restricao.ver
   comentario.deleteOne();
   res.status(200).json({msg: `Comentário deletado com sucesso!`});
 });
-
 
 
 module.exports = router;

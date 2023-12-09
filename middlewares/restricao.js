@@ -79,19 +79,20 @@ const verificaListComentario = async (req, res, next) => {
     const comentario = await Comentario.find();
     if(comentario) {
         const limite = parseInt(req.query.limite);
-        const pagina = parseInt(req.query.página);
-        if(limite == "" && pagina == "") {
+        const pagina = parseInt(req.query.pagina);
+        if(limite && pagina) {
             if(limite == 5 || limite == 10 || limite == 30) {
                 next();
             } else {
-                res.status(406).json({ msg: `Limite inválido.` });
+                res.status(406).json({ msg: `Limite inválido, deve ser definido apenas (5|10|30).` });
             }
         } else {
-            res.status(406).json({ msg: `Campos vazios.` });
+            res.status(406).json({ msg: `Os campos estão vazios` });
         }
     } else {
         res.status(401).json({ msg: `Nenhum comentário encontrado.` });
     }
 }
+
 
 module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario, verificaDelComentario, verificaListComentario};

@@ -44,39 +44,27 @@ const checarAutenticacao = (req, res, next) => {
 }
 
 const checarEscritor = (req, res, next) => {
-    if(req.session.user) {
-        if(req.session.user.permissao == process.env.TYPEB){
-            next();
-        } else {
-            res.status(403).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
-        }
+    if(req.session.user.permissao == process.env.TYPEB){
+        next();
     } else {
-        res.status(401).json({ msg: `Usuário não autenticado.` });
+        res.status(403).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
     }
 }
 
 const checarAdmin = (req, res, next) => {
-    if(req.session.user) {
-        if(req.session.user.permissao == process.env.TYPEA){
-            next();
-        } else {
-            res.status(403).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
-        }
+    if(req.session.user.permissao == process.env.TYPEA){
+        next();
     } else {
-        res.status(401).json({ msg: `Usuário não autenticado.` });
+        res.status(403).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
     }
 }
 
 const checarLeitor = (req, res, next) => {
-    if(req.session.user) {
-        if(req.session.user.permissao == process.env.TYPEDefault) {
-            next();
-        } else {
-            res.status(403).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
-        }
+    if(req.session.user.permissao == process.env.TYPEDefault) {
+        next();
     } else {
-        res.status(401).json({ msg: `Usuário não autenticado.`});
-    }    
+        res.status(403).json({ msg: `Usuário não tem permissão para acessar este recurso.` });
+    }
 }
 
 module.exports = {registroUsuario, loginUser, checarAutenticacao, checarEscritor, checarAdmin,checarLeitor};
