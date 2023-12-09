@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Reportagem = require('../models/ReportagemModel');
 const autenticacao = require('../middlewares/autenticacao');
+const restricao = require('../middlewares/restricao');
 
 router.use(autenticacao.checarAutenticacao);
 

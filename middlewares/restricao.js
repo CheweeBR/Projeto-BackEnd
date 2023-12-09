@@ -94,5 +94,23 @@ const verificaListComentario = async (req, res, next) => {
     }
 }
 
+const verificaListReportagem = async (req, res, next) => {
+    const reportagem = await Reportagem.find();
+    if(reportagem) {
+        const limite = parseInt(req.query.limite);
+        const pagina = parseInt(req.query.pagina);
+        if(limite && pagina) {
+            if(limite == 5 || limite == 10 || limite == 30) {
+                next();
+            } else {
+                res.status(406).json({ msg: `Limite inválido, deve ser definido apenas (5|10|30).` });
+            }
+        } else {
+            res.status(406).json({ msg: `Os campos estão vazios` });
+        }
+    } else {
+        res.status(401).json({ msg: `Nenhuma reportagem encontrada.` });
+    }
+}
 
-module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario, verificaDelComentario, verificaListComentario};
+module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario, verificaDelComentario, verificaListComentario, verificaListReportagem};

@@ -10,9 +10,13 @@ router.use(autenticacao.checarAutenticacao);
 
 // Rota para listar reportagens
 
-router.get('/Reportagem', async function(req, res) {
+router.get('/Reportagem', restricao.verificaListReportagem, async function(req, res) {
   const reportagem = await Reportagem.find();
-  res.send(reportagem);
+  const limite = parseInt(req.query.limite);
+  const pagina = parseInt(req.query.pagina);
+  const deslocamento = (pagina - 1) * limite;
+  const reportagens = await Reportagem.find().skip(deslocamento).limit(limite);
+  res.status(200).json({msg: `Reportagens:`, reportagens});
 });
 
 // Rota para buscar reportagem por conteúdo
