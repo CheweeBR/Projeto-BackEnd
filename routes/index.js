@@ -31,14 +31,32 @@ router.post('/login', autenticacao.loginUser, async function(req, res) {
 });
 
 router.post('/registro', autenticacao.registroUsuario, async function(req, res) {
+  dataNascimento = new Date(req.body.dataNascimento);
+  idade = new Date().getFullYear() - dataNascimento.getFullYear();
   const usuario = new Usuario ({
     Nome: req.body.user,
+    Sobrenome: req.body.sobrenome,
+    dataNascimento: req.body.dataNascimento,
+    idade: idade,
     password: req.body.password,
     permissao: process.env.TYPEDefault
   });
   await usuario.save();
   console.log(usuario);
   res.status(200).json({ msg: `Usuário criado com sucesso!` });
+});
+
+router.post('/logout', function(req, res) {
+  req.session.destroy();
+  res.status(200).json({ msg: `Logout realizado com sucesso!` });
+});
+
+router.put("/AtualizarUsuario", async function(req, res) {
+  usuario = await Usuario.findOne({ Nome: req.body.user });
+  usuario.Nome = req.body.newuser;
+  usuario.password = req.body.newpassword;
+  await usuario.updateOne(usuario);
+  res.status(200).json({ msg: `Usuário atualizado com sucesso!` });
 });
 
 router.get('/install', function(req,res) {
