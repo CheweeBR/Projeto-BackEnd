@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const Usuario = require('../models/UsuarioModel');
 const autenticacao = require('../middlewares/autenticacao');
+const restricao = require('../middlewares/restricao');
 
 router.use(autenticacao.checarAutenticacao);
 
@@ -51,11 +52,10 @@ router.post('/logout', function(req, res) {
   res.status(200).json({ msg: `Logout realizado com sucesso!` });
 });
 
-router.put("/AtualizarUsuario", async function(req, res) {
-  usuario = await Usuario.findOne({ Nome: req.body.user });
-  usuario.Nome = req.body.newuser;
-  usuario.password = req.body.newpassword;
-  await usuario.updateOne(usuario);
+router.put("/AtualizarUsuario", restricao.verificaAttUsuario ,async function(req, res) {
+  dataNascimento = new Date(req.body.novaDataNascimento);
+  idade = new Date().getFullYear() - dataNascimento.getFullYear();
+  usuario = await Usuario.findOneAndUpdate({ Nome: req.body.novoNome, Sobrenome: req.body.novoSobrenome, dataNascimento: req.body.novaDataNascimento, password: req.body.novaSenha, idade: idade});
   res.status(200).json({ msg: `Usuário atualizado com sucesso!` });
 });
 

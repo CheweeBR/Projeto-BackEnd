@@ -144,4 +144,22 @@ const verificaAvaliacao = async (req, res, next) => {
     }
 }
 
-module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario, verificaDelComentario, verificaListComentario, verificaListReportagem, verificaAvaliacao, verificaListUsuario};
+const verificaAttUsuario = async (req, res, next) => {
+    const usuario = await Usuario.findOne({ Nome: req.session.user.Nome });
+    if(usuario) {
+        if(req.body.novoNome != "" && req.body.novaSenha != "") {
+            if(req.body.novaSenha === req.body.novaSenha2){
+                next();
+            }
+            else {
+                res.status(406).json({ msg: `As senhas não coincidem.` });
+            }
+        } else {
+            res.status(406).json({ msg: `Campos vazios.` });
+        }
+    } else {
+        res.status(401).json({ msg: `Usuário não encontrado.` });
+    }
+}
+
+module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario, verificaDelComentario, verificaListComentario, verificaListReportagem, verificaAvaliacao, verificaListUsuario,verificaAttUsuario};
