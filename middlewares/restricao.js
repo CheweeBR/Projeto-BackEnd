@@ -35,15 +35,10 @@ const verificaADMparaDeletar = async (req, res, next) => {
 const verificarAddComentario = async (req, res, next) => {
     const id = await Reportagem.findOne({ _id: req.params.id });
     if(id) {
-        if(req.body.conteudo != "" && req.body.nota != "") {
-            if(req.body.nota >= 0 && req.body.nota <= 5) {
+        if(req.body.conteudo != "") {
                 next();
-            } else {
-                res.status(406).json({ msg: `Nota deve ser entre 0 e 5.` });
-            }
-        } else { 
-            res.status(406).json({ msg: `Campos vazios.` });
-        
+        } else {
+            res.status(406).json({ msg: `Comentário vazio.` });
         }
     } else {
         res.status(401).json({ msg: `Reportagem não encontrada.` });
@@ -113,4 +108,21 @@ const verificaListReportagem = async (req, res, next) => {
     }
 }
 
-module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario, verificaDelComentario, verificaListComentario, verificaListReportagem};
+const verificaAvaliacao = async (req, res, next) => {
+    const reportagem = await Reportagem.findOne({ _id: req.params.id });
+    if(reportagem) {
+        if(req.body.nota != "") {
+            if(req.body.nota >= 0 && req.body.nota <= 5) {
+                next();
+            } else {
+                res.status(406).json({ msg: `Nota deve ser entre 0 e 5.` });
+            }
+        } else {
+            res.status(406).json({ msg: `Nota não definida.` });
+        }
+    } else {
+        res.status(401).json({ msg: `Reportagem não encontrada.` });
+    }
+}
+
+module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario, verificaDelComentario, verificaListComentario, verificaListReportagem, verificaAvaliacao};

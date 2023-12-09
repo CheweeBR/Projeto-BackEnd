@@ -4,8 +4,6 @@ const restricao = require('../middlewares/restricao');
 const Usuario = require('../models/UsuarioModel');
 const router = express.Router();
 
-router.use(autenticacao.checarAutenticacao);
-
 // Rota para alterar o tipo de permissão dos usuários
 
 router.put('/AlterarPermissao', autenticacao.checarAdmin,restricao.verificaTipoPermissao, async function(req, res) {

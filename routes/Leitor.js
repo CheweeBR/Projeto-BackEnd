@@ -6,35 +6,21 @@ const Usuario = require('../models/UsuarioModel');
 const autenticacao = require('../middlewares/autenticacao');
 const restricao = require('../middlewares/restricao');
 
-router.use(autenticacao.checarAutenticacao);
 
-// Rota para listar reportagens
+// Rota para avaliar reportagem
 
-router.get('/Reportagem', restricao.verificaListReportagem, async function(req, res) {
-  const reportagem = await Reportagem.find();
-  const limite = parseInt(req.query.limite);
-  const pagina = parseInt(req.query.pagina);
-  const deslocamento = (pagina - 1) * limite;
-  const reportagens = await Reportagem.find().skip(deslocamento).limit(limite);
-  res.status(200).json({msg: `Reportagens:`, reportagens});
+router.put('/avaliarReportagem/:id', autenticacao.checarLeitor, restricao.verificaAvaliacao, async function(req, res) {
+  const reportagem = await Reportagem.findById(req.params.id);
+  const nota = req.body.nota;
+  let quantidade = reportagem.avaliacao.Quantidade;
+  let media = reportagem.avaliacao.Media;
+  media = (media * quantidade + nota) / (quantidade + 1);
+  reportagem.avaliacao.Media = media;
+  reportagem.avaliacao.Quantidade = quantidade + 1;
+  await Reportagem.findByIdAndUpdate(req.params.id, {avaliacao: reportagem.avaliacao});
+  res.status(200).json({msg: `Avaliação realizada com sucesso!`});
 });
 
-// Rota para buscar reportagem por conteúdo
-
-router.get('/Reportagem/:conteudo', async function(req, res) {
-  const conteudo = req.body.conteudo;
-  const buscar = await Reportagem.findOne({ descricao: conteudo });
-  console.log(conteudo);
-  console.log(buscar);
-  if(buscar) {
-    if(buscar.descricao != "") {
-      res.send(reportagem);
-    }
-  }
-  else {
-    res.status(400).json({ error: 'Conteúdo não encontrado.' });
-  }
-});
 
 // Rota para listar comentários
 
@@ -45,7 +31,6 @@ router.get('/Comentarios/', restricao.verificaListComentario, async function(req
   const comentario = await Comentario.find().skip(deslocamento).limit(limite);
   res.status(200).json({msg: `Comentários:`, comentario});
 });
-
 
 // Rota para adicionar comentários
 
@@ -66,14 +51,14 @@ router.post('/adicionarComentario/:id',restricao.verificarAddComentario, async f
 
 // Rota para atualizar comentários
 
-router.put('/atualizarComentario/:id', autenticacao.checarLeitor,restricao.verificaAttComentario, async function(req, res) {
+router.put('/atualizarComentario/:id',restricao.verificaAttComentario, async function(req, res) {
   await Comentario.findByIdAndUpdate(req.params.id, {conteudo: req.body.conteudo,nota: req.body.nota, data: Date()});
   res.status(200).json({msg:"O comentário foi atualizado com sucesso."});
 });
 
 // Rota para deletar comentários
 
-router.delete('/deletarComentario/:id', autenticacao.checarLeitor, restricao.verificaDelComentario, async function(req, res) {
+router.delete('/deletarComentario/:id', restricao.verificaDelComentario, async function(req, res) {
   const comentario = await Comentario.findByIdAndDelete(req.params.id);
   await Reportagem.findByIdAndUpdate(comentario.reportagemID, {$pull: {comentarios: comentario._id}});
   await Usuario.findByIdAndUpdate(comentario.autorID, {$pull: {comentarios: comentario._id}});

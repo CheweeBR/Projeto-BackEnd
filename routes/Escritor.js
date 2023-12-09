@@ -4,7 +4,16 @@ const Reportagem = require('../models/ReportagemModel');
 const autenticacao = require('../middlewares/autenticacao');
 const restricao = require('../middlewares/restricao');
 
-router.use(autenticacao.checarAutenticacao);
+// Rota para listar reportagens
+
+router.get('/Reportagem', restricao.verificaListReportagem, async function(req, res) {
+  const reportagem = await Reportagem.find();
+  const limite = parseInt(req.query.limite);
+  const pagina = parseInt(req.query.pagina);
+  const deslocamento = (pagina - 1) * limite;
+  const reportagens = await Reportagem.find().skip(deslocamento).limit(limite);
+  res.status(200).json({msg: `Reportagens:`, reportagens});
+});
 
 // Rota para adicionar reportagens
 router.post('/AdicionarReportagem', autenticacao.checarEscritor, async function(req, res) {
