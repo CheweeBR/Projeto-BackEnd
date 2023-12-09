@@ -4,6 +4,15 @@ const restricao = require('../middlewares/restricao');
 const Usuario = require('../models/UsuarioModel');
 const router = express.Router();
 
+// Rota para listar usuários
+
+router.get('/Usuarios', autenticacao.checarAdmin, restricao.verificaListUsuario, async function(req, res) {
+    const limite = parseInt(req.query.limite);
+    const pagina = parseInt(req.query.pagina);
+    const deslocamento = (pagina - 1) * limite;
+    const usuarios = await Usuario.find().skip(deslocamento).limit(limite);
+    res.status(200).json({ msg: `Usuários:`, usuarios });
+});
 // Rota para alterar o tipo de permissão dos usuários
 
 router.put('/AlterarPermissao', autenticacao.checarAdmin,restricao.verificaTipoPermissao, async function(req, res) {

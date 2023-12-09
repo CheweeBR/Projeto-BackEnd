@@ -7,7 +7,6 @@ const restricao = require('../middlewares/restricao');
 // Rota para listar reportagens
 
 router.get('/Reportagem', restricao.verificaListReportagem, async function(req, res) {
-  const reportagem = await Reportagem.find();
   const limite = parseInt(req.query.limite);
   const pagina = parseInt(req.query.pagina);
   const deslocamento = (pagina - 1) * limite;

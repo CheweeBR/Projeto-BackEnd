@@ -30,7 +30,6 @@ router.post('/login', autenticacao.loginUser, async function(req, res) {
   res.status(200).json({ msg: 'Acesso realizado com sucesso', token: token, req: req.session.user});
 });
 
-
 router.post('/registro', autenticacao.registroUsuario, async function(req, res) {
   const usuario = new Usuario ({
     Nome: req.body.user,
