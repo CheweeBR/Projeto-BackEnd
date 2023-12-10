@@ -5,6 +5,7 @@ const reportagemSchema = new mongoose.Schema({
     descricao: String,
     data: String,
     autor: String,
+    autorID: String,
     avaliacao: {Quantidade: Number, Media: Number},
     comentarios: Array,
 });

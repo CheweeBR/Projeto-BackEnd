@@ -147,6 +147,9 @@ const verificaAvaliacao = async (req, res, next) => {
 const verificaAttUsuario = async (req, res, next) => {
     if(req.session.user.permissao === process.env.TYPEA) {
         usuario = await Usuario.findOne({ Nome: req.body.user });
+        if(req.body.user == '') {
+            res.status(406).json({ msg: `O campo user está vazio.` });
+        }
     } else {
         usuario = await Usuario.findOne({ Nome: req.session.user.Nome });
     }
@@ -166,5 +169,13 @@ const verificaAttUsuario = async (req, res, next) => {
     }
 }
 
+const verificaInicializacao = async (req, res, next) => {
+    const usuario = await Usuario.find();
+    if(usuario.length == 0) {
+       next();
+    } else {
+        res.status(403).json({ msg: `O sistema já foi inicializado.` });
+    }
+}
 
-module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario, verificaDelComentario, verificaListComentario, verificaListReportagem, verificaAvaliacao, verificaListUsuario,verificaAttUsuario};
+module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario, verificaDelComentario, verificaListComentario, verificaListReportagem, verificaAvaliacao, verificaListUsuario, verificaAttUsuario, verificaInicializacao};

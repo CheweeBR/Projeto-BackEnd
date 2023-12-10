@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const db = require('../config/database');;
 const jwt = require('jsonwebtoken');
 const Usuario = require('../models/UsuarioModel');
+const Reportagem = require('../models/ReportagemModel');
+const Comentario = require('../models/ComentarioModel');
 const autenticacao = require('../middlewares/autenticacao');
 const restricao = require('../middlewares/restricao');
 
@@ -32,7 +35,7 @@ router.post('/login', autenticacao.loginUser, async function(req, res) {
   const usuario = user.toObject();
   req.session.user = usuario;
   const token = jwt.sign(usuario, process.env.secret, { expiresIn: '100' });
-  res.status(200).json({ msg: 'Acesso realizado com sucesso', token: token, req: req.session.user});
+  res.status(200).json({ msg: 'Acesso realizado com sucesso', token: token});
 });
 
 // Rota para realizar logout
@@ -63,14 +66,18 @@ router.post('/registro', autenticacao.registroUsuario, async function(req, res) 
 // Rota para Atualizar seus dados
 
 router.put("/AtualizarMeusDados", restricao.verificaAttUsuario ,async function(req, res) {
+  const db = await initDb();
+
   const dataNascimento = new Date(req.body.novaDataNascimento);
   let idade = new Date().getFullYear() - dataNascimento.getFullYear();
   usuario = await Usuario.findOneAndUpdate({ Nome: req.body.novoNome, Sobrenome: req.body.novoSobrenome, dataNascimento: req.body.novaDataNascimento, password: req.body.novaSenha, idade: idade});
   res.status(200).json({ msg: `Usuário atualizado com sucesso!` });
 });
 
-router.get('/install', function(req,res) {
-  //instalar que realiza a instalação do banco de dados (criação das tabelas/coleções e inserção de dados no banco)
+router.get('/install', restricao.verificaInicializacao, async function(req,res) {
+  await db.preencheDefault();
+  db.sincronizaID();
+  res.status(200).json({ msg: `Dados padrões criados com sucesso!`, user: `usuário administrador padrão -> user:admin / password:admin.` });
 });
 
 router.get('/docs', function(req,res) {
