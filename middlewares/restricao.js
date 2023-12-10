@@ -174,7 +174,7 @@ const verificaInicializacao = async (req, res, next) => {
     if(usuario.length == 0) {
        next();
     } else {
-        res.status(403).json({ msg: `O sistema já foi inicializado.` });
+        res.status(403).json({ msg: `O sistema foi inicializado.`, user: `usuário administrador padrão -> user:admin / password:admin.` });
     }
 }
 

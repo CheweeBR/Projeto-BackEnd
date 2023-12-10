@@ -5,7 +5,13 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const session = require('express-session');
-const jwt = require('jsonwebtoken');
+
+const app = express(); 
+
+const swaggerUiExpress = require('swagger-ui-express');
+const swagger = require('./swaggerDocs.json');
+
+app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(swagger));
 
 require('dotenv').config();
 
@@ -13,8 +19,6 @@ const indexRouter = require('./routes/index');
 const escritorRouter = require('./routes/Escritor');
 const adminRouter = require('./routes/Admin');
 const leitorRouter = require('./routes/Leitor');
-
-const app = express(); 
 
 app.use(session({secret: process.env.secret, resave: false, saveUninitialized: true}));
 

@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/database');;
 const jwt = require('jsonwebtoken');
+
 const Usuario = require('../models/UsuarioModel');
 const Reportagem = require('../models/ReportagemModel');
 const Comentario = require('../models/ComentarioModel');
+
 const autenticacao = require('../middlewares/autenticacao');
 const restricao = require('../middlewares/restricao');
 
@@ -80,8 +82,5 @@ router.get('/install', restricao.verificaInicializacao, async function(req,res) 
   res.status(200).json({ msg: `Dados padrões criados com sucesso!`, user: `usuário administrador padrão -> user:admin / password:admin.` });
 });
 
-router.get('/docs', function(req,res) {
-  //contendo a documentação gerada pela ferramenta Swagger
-});
 
 module.exports = router;
