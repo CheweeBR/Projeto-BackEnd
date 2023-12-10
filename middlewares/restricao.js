@@ -145,7 +145,11 @@ const verificaAvaliacao = async (req, res, next) => {
 }
 
 const verificaAttUsuario = async (req, res, next) => {
-    const usuario = await Usuario.findOne({ Nome: req.session.user.Nome });
+    if(req.session.user.permissao === process.env.TYPEA) {
+        usuario = await Usuario.findOne({ Nome: req.body.user });
+    } else {
+        usuario = await Usuario.findOne({ Nome: req.session.user.Nome });
+    }
     if(usuario) {
         if(req.body.novoNome != "" && req.body.novaSenha != "") {
             if(req.body.novaSenha === req.body.novaSenha2){
@@ -161,5 +165,6 @@ const verificaAttUsuario = async (req, res, next) => {
         res.status(401).json({ msg: `Usuário não encontrado.` });
     }
 }
+
 
 module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario, verificaDelComentario, verificaListComentario, verificaListReportagem, verificaAvaliacao, verificaListUsuario,verificaAttUsuario};

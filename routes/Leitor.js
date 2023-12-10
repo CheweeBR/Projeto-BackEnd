@@ -32,6 +32,14 @@ router.get('/Comentarios/', restricao.verificaListComentario, async function(req
   res.status(200).json({msg: `Comentários:`, comentario});
 });
 
+router.get('/MeusComentarios/', restricao.verificaListComentario, async function(req, res) {
+  const limite = parseInt(req.query.limite);
+  const pagina = parseInt(req.query.pagina);
+  const deslocamento = (pagina - 1) * limite;
+  const comentario = await Comentario.find({autorID: req.session.user._id}).skip(deslocamento).limit(limite);
+  res.status(200).json({msg: `Seus comentários:`, comentario});
+});
+
 // Rota para adicionar comentários
 
 router.post('/adicionarComentario/:id',restricao.verificarAddComentario, async function(req, res) {   

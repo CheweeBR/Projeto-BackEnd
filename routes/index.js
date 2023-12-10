@@ -7,6 +7,8 @@ const restricao = require('../middlewares/restricao');
 
 router.use(autenticacao.checarAutenticacao);
 
+// Rota menu principal
+
 router.get('/', function(req, res) {
   usuario = req.session.user;
   if(usuario.permissao === process.env.TYPEA) {
@@ -23,6 +25,8 @@ router.get('/', function(req, res) {
   }
 });
 
+// Rota para realizar login
+
 router.post('/login', autenticacao.loginUser, async function(req, res) {
   const user = await Usuario.findOne({Nome: req.body.user});
   const usuario = user.toObject();
@@ -30,6 +34,15 @@ router.post('/login', autenticacao.loginUser, async function(req, res) {
   const token = jwt.sign(usuario, process.env.secret, { expiresIn: '100' });
   res.status(200).json({ msg: 'Acesso realizado com sucesso', token: token, req: req.session.user});
 });
+
+// Rota para realizar logout
+
+router.post('/logout', function(req, res) {
+  req.session.destroy();
+  res.status(200).json({ msg: `Logout realizado com sucesso!` });
+});
+
+// Rota para cadastrar usuário
 
 router.post('/registro', autenticacao.registroUsuario, async function(req, res) {
   dataNascimento = new Date(req.body.dataNascimento);
@@ -47,14 +60,11 @@ router.post('/registro', autenticacao.registroUsuario, async function(req, res) 
   res.status(200).json({ msg: `Usuário criado com sucesso!` });
 });
 
-router.post('/logout', function(req, res) {
-  req.session.destroy();
-  res.status(200).json({ msg: `Logout realizado com sucesso!` });
-});
+// Rota para Atualizar seus dados
 
-router.put("/AtualizarUsuario", restricao.verificaAttUsuario ,async function(req, res) {
-  dataNascimento = new Date(req.body.novaDataNascimento);
-  idade = new Date().getFullYear() - dataNascimento.getFullYear();
+router.put("/AtualizarMeusDados", restricao.verificaAttUsuario ,async function(req, res) {
+  const dataNascimento = new Date(req.body.novaDataNascimento);
+  let idade = new Date().getFullYear() - dataNascimento.getFullYear();
   usuario = await Usuario.findOneAndUpdate({ Nome: req.body.novoNome, Sobrenome: req.body.novoSobrenome, dataNascimento: req.body.novaDataNascimento, password: req.body.novaSenha, idade: idade});
   res.status(200).json({ msg: `Usuário atualizado com sucesso!` });
 });

@@ -24,6 +24,13 @@ router.put('/AlterarPermissao', autenticacao.checarAdmin,restricao.verificaTipoP
 
 // Rota para deletar usuários
 
+router.put("/AtualizarUsuarios", autenticacao.checarAdmin, restricao.verificaAttUsuario, async function(req, res) {
+    dataNascimento = new Date(req.body.novaDataNascimento);
+    idade = new Date().getFullYear() - dataNascimento.getFullYear();
+    usuario = await Usuario.findOneAndUpdate({ Nome: req.body.novoNome, Sobrenome: req.body.novoSobrenome, dataNascimento: req.body.novaDataNascimento, password: req.body.novaSenha, idade: idade});
+    res.status(200).json({ msg: `Usuário atualizado com sucesso!` });
+  });
+
 router.delete('/DeletarUsuario', autenticacao.checarAdmin, restricao.verificaADMparaDeletar, async function(req, res) {
     usuario = await Usuario.findOne({ Nome: req.body.user });
     await usuario.deleteOne(usuario);
