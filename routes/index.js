@@ -4,13 +4,13 @@ const db = require('../config/database');;
 const jwt = require('jsonwebtoken');
 
 const Usuario = require('../models/UsuarioModel');
-const Reportagem = require('../models/ReportagemModel');
-const Comentario = require('../models/ComentarioModel');
 
 const autenticacao = require('../middlewares/autenticacao');
 const restricao = require('../middlewares/restricao');
+const { parse } = require('dotenv');
 
 router.use(autenticacao.checarAutenticacao);
+// router.use(autenticacao.checarToken);
 
 // Rota menu principal
 
@@ -67,12 +67,9 @@ router.post('/registro', autenticacao.registroUsuario, async function(req, res) 
 
 // Rota para Atualizar seus dados
 
-router.put("/AtualizarMeusDados", restricao.verificaAttUsuario ,async function(req, res) {
-  const db = await initDb();
-
-  const dataNascimento = new Date(req.body.novaDataNascimento);
-  let idade = new Date().getFullYear() - dataNascimento.getFullYear();
-  usuario = await Usuario.findOneAndUpdate({ Nome: req.body.novoNome, Sobrenome: req.body.novoSobrenome, dataNascimento: req.body.novaDataNascimento, password: req.body.novaSenha, idade: idade});
+router.put("/AtualizarMeusDados", restricao.verificaAttMeuUsuario ,async function(req, res) {
+  const usuario = await Usuario.findOne({ Nome: req.session.user.Nome });
+  await usuario.updateOne({ Nome: req.body.novoNome, Sobrenome: req.body.novoSobrenome, dataNascimento: req.body.novaDataNascimento, password: req.body.novaSenha});
   res.status(200).json({ msg: `Usuário atualizado com sucesso!` });
 });
 

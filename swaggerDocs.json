@@ -116,19 +116,16 @@
             "schema": {
               "type": "object",
               "properties": {
-                "novaDataNascimento": {
-                  "example": "any"
-                },
                 "novoNome": {
                   "example": "any"
                 },
                 "novoSobrenome": {
                   "example": "any"
                 },
-                "novaSenha": {
+                "novaDataNascimento": {
                   "example": "any"
                 },
-                "user": {
+                "novaSenha": {
                   "example": "any"
                 },
                 "novaSenha2": {
@@ -163,19 +160,6 @@
           },
           "403": {
             "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/docs": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
           }
         }
       }
@@ -381,7 +365,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "novaDataNascimento": {
+                "user": {
                   "example": "any"
                 },
                 "novoNome": {
@@ -390,10 +374,10 @@
                 "novoSobrenome": {
                   "example": "any"
                 },
-                "novaSenha": {
+                "novaDataNascimento": {
                   "example": "any"
                 },
-                "user": {
+                "novaSenha": {
                   "example": "any"
                 },
                 "novaSenha2": {

@@ -184,6 +184,10 @@ const sincronizaID = async function() {
   await Comentario.updateOne(ramonaComentario1, {autorID: ramonaUsuario._id, reportagemID: martyReportagem1._id});
   await Comentario.updateOne(ramonaComentario2, {autorID: ramonaUsuario._id, reportagemID: emmettReportagem1._id});
   await Comentario.updateOne(adminComentario, {autorID: adminUsuario._id, reportagemID: martyReportagem2._id});
+
+  await Usuario.updateOne(adminUsuario, {comentarios: [adminComentario._id]});
+  await Usuario.updateOne(scottUsuario, {comentarios: [scottComentario1._id, scottComentario2._id]});
+  await Usuario.updateOne(ramonaUsuario, {comentarios: [ramonaComentario1._id, ramonaComentario2._id]});
 }
 
 module.exports = { db, preencheDefault, sincronizaID};

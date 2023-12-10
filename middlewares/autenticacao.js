@@ -39,6 +39,27 @@ const loginUser = async (req, res, next) => {
     }
 }
 
+const checarToken = (req, res, next) => {
+    const rotasPermitidas = ['/login', '/registro', '/install', '/docs'];
+  
+    if (rotasPermitidas.includes(req.path)) {
+      return next();
+    }
+  
+    const token = req.headers['authorization'].split(' ')[1];
+  
+    if (!token) {
+      return res.status(401).json({ msg: `Token não encontrado.` });
+    }
+  
+    try {
+      next();
+    } catch (error) {
+      return res.status(401).json({ msg: `Token inválido.` });
+    }
+  };
+  
+
 const checarAutenticacao = (req, res, next) => {
     if(req.path === '/login' || req.path === '/registro' || req.path === '/install' || req.path === '/docs'){
         next();
@@ -74,4 +95,4 @@ const checarLeitor = (req, res, next) => {
     }
 }
 
-module.exports = {registroUsuario, loginUser, checarAutenticacao, checarEscritor, checarAdmin,checarLeitor};
+module.exports = {registroUsuario, loginUser, checarAutenticacao, checarToken, checarEscritor, checarAdmin,checarLeitor};

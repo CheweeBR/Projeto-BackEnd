@@ -144,29 +144,37 @@ const verificaAvaliacao = async (req, res, next) => {
     }
 }
 
+const verificaAttMeuUsuario = async (req, res, next) => {
+    if(req.body.novoNome != "" && req.body.novaSenha != "") {
+        if(req.body.novaSenha === req.body.novaSenha2){
+            next();
+        }
+        else {
+            res.status(406).json({ msg: `As senhas não coincidem.` });
+        }
+    } else {
+        res.status(406).json({ msg: `Campos vazios.` });
+    }
+}
+
 const verificaAttUsuario = async (req, res, next) => {
     if(req.session.user.permissao === process.env.TYPEA) {
         usuario = await Usuario.findOne({ Nome: req.body.user });
-        if(req.body.user == '') {
-            res.status(406).json({ msg: `O campo user está vazio.` });
-        }
-    } else {
-        usuario = await Usuario.findOne({ Nome: req.session.user.Nome });
-    }
-    if(usuario) {
-        if(req.body.novoNome != "" && req.body.novaSenha != "") {
-            if(req.body.novaSenha === req.body.novaSenha2){
-                next();
-            }
-            else {
-                res.status(406).json({ msg: `As senhas não coincidem.` });
+        if(usuario) {
+            if(req.body.novoNome != "" && req.body.novaSenha != "") {
+                if(req.body.novaSenha === req.body.novaSenha2){
+                    next();
+                }
+                else {
+                    res.status(406).json({ msg: `As senhas não coincidem.` });
+                }
+            } else {
+                res.status(406).json({ msg: `Campos vazios.` });
             }
         } else {
-            res.status(406).json({ msg: `Campos vazios.` });
+            res.status(401).json({ msg: `Usuário não encontrado.` });
         }
-    } else {
-        res.status(401).json({ msg: `Usuário não encontrado.` });
-    }
+    } 
 }
 
 const verificaInicializacao = async (req, res, next) => {
@@ -178,4 +186,4 @@ const verificaInicializacao = async (req, res, next) => {
     }
 }
 
-module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario, verificaDelComentario, verificaListComentario, verificaListReportagem, verificaAvaliacao, verificaListUsuario, verificaAttUsuario, verificaInicializacao};
+module.exports = {verificaTipoPermissao, verificaADMparaDeletar, verificarAddComentario, verificaAttComentario, verificaDelComentario, verificaListComentario, verificaListReportagem, verificaAvaliacao, verificaListUsuario, verificaAttUsuario, verificaAttMeuUsuario, verificaInicializacao};
